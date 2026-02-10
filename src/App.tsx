@@ -9,7 +9,7 @@ import {
   ArrowRight,
   Star,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { experience, projects, skills } from "./skillsDetails";
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("about");
@@ -28,6 +28,52 @@ export default function Portfolio() {
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
+  const aboutRef = useRef<HTMLElement>(null);
+  const skillsRef = useRef<HTMLElement>(null);
+  const projectsRef = useRef<HTMLElement>(null);
+  const experienceRef = useRef<HTMLElement>(null);
+  const contactRef = useRef<HTMLElement>(null);
+
+  const sections = [
+    { name: "about", ref: aboutRef },
+    { name: "skills", ref: skillsRef },
+    { name: "projects", ref: projectsRef },
+    { name: "experience", ref: experienceRef },
+    { name: "contact", ref: contactRef },
+  ];
+
+  
+  // Intersection Observer to highlight current section
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const sectionName = entry.target.getAttribute("data-section");
+            if (sectionName) setActiveSection(sectionName);
+          }
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+
+    sections.forEach(
+      (sec) => sec.ref.current && observer.observe(sec.ref.current),
+    );
+
+    return () => {
+      sections.forEach(
+        (sec) => sec.ref.current && observer.unobserve(sec.ref.current),
+      );
+    };
+  }, []);
+
+  // Scroll to section
+  const scrollToSection = (ref: React.RefObject<HTMLElement | null>) => {
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+
   return (
     <>
       <div
@@ -70,30 +116,29 @@ export default function Portfolio() {
                   <div className="absolute inset-0 bg-pink-400 blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500" />
                 </div>
                 <span
-                  className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-rose-600 to-fuchsia-600 bg-clip-text text-transparent animate-gradient"
+                  className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-rose-600 to-fuchsia-600 bg-clip-text text-transpareant animate-gradient"
                   style={{ backgroundSize: "200%" }}
                 >
                   Adeeko Feyisetan
                 </span>
               </div>
 
-              <div className="flex gap-6">
-                {["about", "skills", "projects", "experience", "contact"].map(
-                  (section, index) => (
-                    <button
-                      key={section}
-                      onClick={() => setActiveSection(section)}
+             <div className="flex gap-6">
+            {sections.map((sec, idx) => (
+              <button
+                key={sec.name}
+                onClick={() => scrollToSection(sec.ref)}
                       className={`capitalize text-sm font-medium transition-all duration-500 hover:text-transparent hover:bg-gradient-to-r hover:from-pink-600 hover:via-rose-600 hover:to-fuchsia-600 hover:bg-clip-text relative group ${
-                        activeSection === section
+                        activeSection === sec.name
                           ? "text-transparent bg-gradient-to-r from-pink-600 via-rose-600 to-fuchsia-600 bg-clip-text"
                           : "text-gray-600"
                       }`}
                       style={{
-                        transitionDelay: `${index * 50}ms`,
+                        transitionDelay: `${idx * 50}ms`,
                       }}
                     >
-                      {section}
-                      {activeSection === section && (
+                      {sec.name}
+                      {activeSection === sec.name && (
                         <span
                           className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-600 via-rose-500 to-fuchsia-600 rounded-full animate-gradient"
                           style={{ backgroundSize: "200%" }}
@@ -109,6 +154,7 @@ export default function Portfolio() {
 
           {/* Hero Section */}
           <section
+           ref={aboutRef} data-section="about" 
             className={`pt-32 pb-20 px-6 transition-all duration-1000 ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
           >
             <div className="max-w-7xl mx-auto">
@@ -241,7 +287,10 @@ export default function Portfolio() {
           </section>
 
           {/* Skills Section */}
-          <section className="py-20 px-6 bg-gradient-to-br from-white/60 via-pink-50/60 to-rose-50/60 backdrop-blur-sm">
+          <section 
+          ref={skillsRef}
+        data-section="skills"
+        className="py-20 px-6 bg-gradient-to-br from-white/60 via-pink-50/60 to-rose-50/60 backdrop-blur-sm">
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-16">
                 <h2
@@ -344,7 +393,8 @@ export default function Portfolio() {
           </section>
 
           {/* Projects Section */}
-          <section className="py-20 px-6 relative overflow-hidden">
+          <section 
+          ref={projectsRef} data-section="projects" className="py-20 px-6 relative overflow-hidden">
             {/* Animated background gradient */}
             <div
               className="absolute inset-0 bg-gradient-to-br from-pink-50 via-rose-50 via-fuchsia-50 to-purple-50 animate-gradient"
@@ -472,7 +522,9 @@ export default function Portfolio() {
           </section>
 
           {/* Experience Section */}
-          <section className="py-20 px-6 bg-gradient-to-br from-white/70 via-pink-50/70 to-rose-50/70 backdrop-blur-sm relative overflow-hidden">
+          <section
+          ref={experienceRef}
+        data-section="experience" className="py-20 px-6 bg-gradient-to-br from-white/70 via-pink-50/70 to-rose-50/70 backdrop-blur-sm relative overflow-hidden">
             {/* Floating gradient orbs */}
             <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-to-br from-pink-300 to-rose-400 rounded-full blur-3xl opacity-20 animate-float" />
             <div
@@ -570,7 +622,10 @@ export default function Portfolio() {
               </div>
             </div>
           </section>
-          <footer className="relative mt-20">
+          <section
+           ref={contactRef}
+        data-section="contact">
+             <footer className="relative mt-20">
             <div className="bg-gradient-to-r from-pink-600 via-rose-500 to-fuchsia-600 text-white">
               <div className="max-w-6xl mx-auto px-6 py-16 text-center">
                 <h2 className="text-3xl font-extrabold">
@@ -606,6 +661,8 @@ export default function Portfolio() {
               </div>
             </div>
           </footer>
+          </section>
+         
         </div>
       </div>
     </>
