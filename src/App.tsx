@@ -73,7 +73,7 @@ export default function Portfolio() {
                   className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-rose-600 to-fuchsia-600 bg-clip-text text-transparent animate-gradient"
                   style={{ backgroundSize: "200%" }}
                 >
-                  Portfolio
+                  Adeeko Feyisetan
                 </span>
               </div>
 
@@ -365,7 +365,7 @@ export default function Portfolio() {
               <div className="grid md:grid-cols-2 gap-8">
                 {projects.map((project, index) => (
                   <div
-                    key={project.title}
+                    key={`${project.title}-${index}`}
                     onMouseEnter={() => setHoveredProject(project.title)}
                     onMouseLeave={() => setHoveredProject(null)}
                     className="group relative rounded-3xl overflow-hidden transition-all duration-700 hover:-translate-y-3 hover:shadow-2xl cursor-pointer"
@@ -379,7 +379,6 @@ export default function Portfolio() {
                     </div>
 
                     <div className="relative z-10 bg-white rounded-3xl overflow-hidden">
-                      {/* Project header with ombre gradient */}
                       <div
                         className={`h-56 bg-gradient-to-br relative overflow-hidden transition-all duration-700 ${
                           index === 0
@@ -392,7 +391,6 @@ export default function Portfolio() {
                         } animate-gradient`}
                         style={{ backgroundSize: "200% 200%" }}
                       >
-                        {/* Animated mesh gradient overlay */}
                         <div className="absolute inset-0 opacity-50">
                           <div className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-float" />
                           <div
@@ -401,7 +399,6 @@ export default function Portfolio() {
                           />
                         </div>
 
-                        {/* Icon on hover */}
                         <div
                           className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
                             hoveredProject === project.title
@@ -409,7 +406,10 @@ export default function Portfolio() {
                               : "opacity-0 scale-50"
                           }`}
                         >
-                          <div className="bg-white/20 backdrop-blur-md p-6 rounded-2xl">
+                          <div
+                            className="bg-white/20 backdrop-blur-md p-6 rounded-2xl"
+                            onClick={() => window.open(project.link, "_blank")}
+                          >
                             <ExternalLink className="w-12 h-12 text-white drop-shadow-lg" />
                           </div>
                         </div>
@@ -583,26 +583,26 @@ export default function Portfolio() {
                   Full-time • Contract • Freelance
                 </p>
                 <div className="flex gap-6 text-center align-center justify-center pt-6">
-                    {[
-                      { Icon: Github, href: "https://github.com/ifeoluwa265" },
-                      {
-                        Icon: Linkedin,
-                        href: "https://www.linkedin.com/in/adeekofeyi/",
-                      },
-                      { Icon: Mail, href: "mailto:adeekofeyi@gmail.com" },
-                    ].map(({ Icon, href }, index) => (
-                      <a
-                        key={index}
-                        href={href}
-                        className="group relative text-gray-600 hover:text-white transition-all duration-500 hover:scale-125"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-500 to-fuchsia-600 rounded-lg opacity-0 group-hover:opacity-100 blur-xl transition-all duration-500" />
-                        <div className="relative bg-white group-hover:bg-gradient-to-br group-hover:from-pink-500 group-hover:via-rose-500 group-hover:to-fuchsia-600 p-3 rounded-lg transition-all duration-500 shadow-md group-hover:shadow-xl">
-                          <Icon className="w-6 h-6" />
-                        </div>
-                      </a>
-                    ))}
-                  </div>
+                  {[
+                    { Icon: Github, href: "https://github.com/ifeoluwa265" },
+                    {
+                      Icon: Linkedin,
+                      href: "https://www.linkedin.com/in/adeekofeyi/",
+                    },
+                    { Icon: Mail, href: "mailto:adeekofeyi@gmail.com" },
+                  ].map(({ Icon, href }, index) => (
+                    <a
+                      key={index}
+                      href={href}
+                      className="group relative text-gray-600 hover:text-white transition-all duration-500 hover:scale-125"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-500 to-fuchsia-600 rounded-lg opacity-0 group-hover:opacity-100 blur-xl transition-all duration-500" />
+                      <div className="relative bg-white group-hover:bg-gradient-to-br group-hover:from-pink-500 group-hover:via-rose-500 group-hover:to-fuchsia-600 p-3 rounded-lg transition-all duration-500 shadow-md group-hover:shadow-xl">
+                        <Icon className="w-6 h-6" />
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </footer>
